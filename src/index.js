@@ -11,18 +11,30 @@ function validate (input, expectedPropTypes, allowExtraProps) {
     throw new Error(`cannot validate props for non-object \`${util.inspect(input)}\``);
   }
 
+  let name = "expectation";
+  if (expectedPropTypes.__name__ && typeof expectedPropTypes.__name__ === "string") {
+    name = expectedPropTypes.__name__;
+    // clone and delete name prop
+    expectedPropTypes = Object.assign({}, expectedPropTypes);
+    delete expectedPropTypes.__name__;
+  }
+
   if (!allowExtraProps) {
     const extraProps = Object.keys(input)
       .filter((key) => !expectedPropTypes.hasOwnProperty(key));
     if (extraProps.length > 0) {
-      throw new Error(`object has extra props: ${extraProps.join(", ")}`)
+      throw new Error(`input has extra props: ${extraProps.join(", ")}`)
     }
   }
 
   // now validate props
   const errors = Object.keys(expectedPropTypes)
     .map((prop) => {
-      const err = expectedPropTypes[prop](input, prop, expectedPropTypes.name || "expect", "prop")
+      const validator = expectedPropTypes[prop];
+      if (typeof validator !== "function") {
+        throw new Error(`invalid validator (not a function): ${validator}`)
+      }
+      const err = validator(input, prop, name, "prop");
       if (!err) return null;
       return `\n - ${err.message}`;
     })

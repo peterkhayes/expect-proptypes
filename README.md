@@ -29,5 +29,8 @@ expect(obj).toContainProps({
 });
 ```
 
+## How can I get better error logging?
+If your proptypes have a property `__name__` which is a string, this will be used in the error logs.
+
 ## What if I want more detailed types?
 Consider using my library [extended-proptypes](https://www.npmjs.com/package/extended-proptypes), which adds many useful validators, such as dates,constants, constants and regex matching for strings and object keys.

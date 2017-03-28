@@ -58,6 +58,13 @@ describe("#toHaveProps", () => {
     );
   });
 
+  it("fails if a validator is not a function", () => {
+    shouldThrow(
+      () => expect({}).toHaveProps({foo: "bar"}),
+      "invalid validator (not a function): bar"
+    );
+  });
+
   it("fails if actual value does not match expected shape", () => {
     const input = {
       num: "asdf",
@@ -69,9 +76,9 @@ describe("#toHaveProps", () => {
     shouldThrow(
       () => expect(input).toHaveProps(shape),
       `invalid propTypes
- - Invalid prop \`num\` of type \`string\` supplied to \`expect\`, expected \`number\`.
- - Required prop \`str\` was not specified in \`expect\`.
- - Invalid prop \`obj.arr[2]\` of type \`boolean\` supplied to \`expect\`, expected \`string\`.`
+ - Invalid prop \`num\` of type \`string\` supplied to \`expectation\`, expected \`number\`.
+ - Required prop \`str\` was not specified in \`expectation\`.
+ - Invalid prop \`obj.arr[2]\` of type \`boolean\` supplied to \`expectation\`, expected \`string\`.`
     );
   });
 
@@ -88,7 +95,23 @@ describe("#toHaveProps", () => {
 
     shouldThrow(
       () => expect(input).toHaveProps(shape),
-      `object has extra props: extraProperty`
+      `input has extra props: extraProperty`
+    );
+  });
+
+  it("can add shape name to errors", () => {
+    const namedShape = {
+      __name__: "My Shape",
+      num: pt.number,
+    };
+    const input = {
+      num: "1",
+    };
+
+    shouldThrow(
+      () => expect(input).toHaveProps(namedShape),
+      `invalid propTypes
+ - Invalid prop \`num\` of type \`string\` supplied to \`My Shape\`, expected \`number\`.`
     );
   });
 
@@ -136,6 +159,13 @@ describe("#toContainProps", () => {
     );
   });
 
+  it("fails if a validator is not a function", () => {
+    shouldThrow(
+      () => expect({}).toContainProps({foo: "bar"}),
+      "invalid validator (not a function): bar"
+    );
+  });
+
   it("fails if actual value does not match expected shape", () => {
     const input = {
       num: "asdf",
@@ -147,9 +177,9 @@ describe("#toContainProps", () => {
     shouldThrow(
       () => expect(input).toContainProps(shape),
       `invalid propTypes
- - Invalid prop \`num\` of type \`string\` supplied to \`expect\`, expected \`number\`.
- - Required prop \`str\` was not specified in \`expect\`.
- - Invalid prop \`obj.arr[2]\` of type \`boolean\` supplied to \`expect\`, expected \`string\`.`
+ - Invalid prop \`num\` of type \`string\` supplied to \`expectation\`, expected \`number\`.
+ - Required prop \`str\` was not specified in \`expectation\`.
+ - Invalid prop \`obj.arr[2]\` of type \`boolean\` supplied to \`expectation\`, expected \`string\`.`
     );
   });
 
@@ -164,6 +194,23 @@ describe("#toContainProps", () => {
       },
     };
     expect(input).toContainProps(shape);
+  });
+
+  it("can add shape name to errors", () => {
+    const namedShape = {
+      __name__: "My Shape",
+      num: pt.number,
+    };
+    const input = {
+      num: "1",
+      foo: "bar",
+    };
+
+    shouldThrow(
+      () => expect(input).toContainProps(namedShape),
+      `invalid propTypes
+ - Invalid prop \`num\` of type \`string\` supplied to \`My Shape\`, expected \`number\`.`
+    );
   });
 
   it("passes if actual value matches expected shape", () => {
