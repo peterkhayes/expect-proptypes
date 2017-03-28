@@ -1,5 +1,5 @@
 # expect-proptypes
-This library allows assertions about object shapes using React's PropTypes library or the standalone [proptypes library](https://www.npmjs.com/package/proptypes) on npm.
+This library extends [expect](https://github.com/mjackson/expect) to allow for assertions about object shapes, using React's PropTypes library or the standalone [proptypes library](https://www.npmjs.com/package/proptypes) on npm.
 
 ## Usage
 ```js
